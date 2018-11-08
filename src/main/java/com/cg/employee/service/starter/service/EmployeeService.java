@@ -28,12 +28,11 @@ public class EmployeeService implements IEmployeeService {
     @Transactional(readOnly = false)
     public Response saveEmployee(Request request) throws Exception {
         Map<String, Object> map = request.getMap();
-        Employee employee = employeeUtil.getEmployee(request, map);
-        String addressType = request.getParam2();
+        Employee employee = employeeUtil.getEmployee(request);
         List<Map<String, String>> addressList = (List<Map<String, String>>) map.get("address_list");
         List<Address> addresses = null;
         if (addressList != null) {
-            addresses = employeeUtil.getAddress(employee, addressType, addressList);
+            addresses = employeeUtil.getAddress(employee, addressList);
             employee.setAddresses(addresses);
         }
         employee = employeeDao.save(employee);

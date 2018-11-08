@@ -10,9 +10,9 @@ import java.util.Map;
 
 public interface IEmployeeUtil {
 
-    List<Address> getAddress(Employee employee, String addressType, List<Map<String, String>> addressList) throws Exception;
+    List<Address> getAddress(Employee employee, List<Map<String, String>> addressList) throws Exception;
 
-    Employee getEmployee(Request request, Map<String, Object> map) throws Exception;
+    Employee getEmployee(Request request) throws Exception;
 
     Response getSuccessResponse(List<Employee> employees, Employee employee, String name) throws Exception;
 

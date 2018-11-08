@@ -16,20 +16,22 @@ public class EmployeeController {
 
     @Autowired
     private IEmployeeService employeeService;
-    Logger logger= LogManager.getLogger(EmployeeController.class);
+    Logger logger = LogManager.getLogger(EmployeeController.class);
 
     @PostMapping("/save")
     public Response saveEmployee(@RequestBody Request request) throws Exception {
-        Response response=employeeService.saveEmployee(request);
+        Response response = employeeService.saveEmployee(request);
         logger.info(response);
         return response;
     }
 
     @GetMapping({"/get", "/get/{id}"})
     public Response getEmployee(@PathVariable Optional<Integer> id) throws Exception {
-        Response response=null;
+        Response response = null;
         if (id.isPresent())
-            response=employeeService.getEmployee(id.get());
+            response = employeeService.getEmployee(id.get());
+        else
+            response = employeeService.getEmployee(null);
         logger.info(response);
         return response;
     }

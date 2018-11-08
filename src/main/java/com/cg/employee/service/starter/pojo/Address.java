@@ -32,8 +32,7 @@ public class Address {
     public Address() {
     }
 
-    public Address(int id, String flatNo, String area, String city, String state, String country, String addressType, Employee employee) {
-        this.id = id;
+    public Address(String flatNo, String area, String city, String state, String country, String addressType, Employee employee) {
         this.flatNo = flatNo;
         this.area = area;
         this.city = city;
@@ -105,6 +104,36 @@ public class Address {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        if (id != address.id) return false;
+        if (flatNo != null ? !flatNo.equals(address.flatNo) : address.flatNo != null) return false;
+        if (area != null ? !area.equals(address.area) : address.area != null) return false;
+        if (city != null ? !city.equals(address.city) : address.city != null) return false;
+        if (state != null ? !state.equals(address.state) : address.state != null) return false;
+        if (country != null ? !country.equals(address.country) : address.country != null) return false;
+        if (addressType != null ? !addressType.equals(address.addressType) : address.addressType != null) return false;
+        return employee != null ? employee.equals(address.employee) : address.employee == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (flatNo != null ? flatNo.hashCode() : 0);
+        result = 31 * result + (area != null ? area.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (addressType != null ? addressType.hashCode() : 0);
+        result = 31 * result + (employee != null ? employee.hashCode() : 0);
+        return result;
     }
 
     @Override

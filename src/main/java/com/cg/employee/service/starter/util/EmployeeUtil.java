@@ -16,7 +16,7 @@ import java.util.Map;
 public class EmployeeUtil implements IEmployeeUtil {
 
     @Override
-    public List<Address> getAddress(Employee employee, String addressType, List<Map<String, String>> addressList) throws Exception {
+    public List<Address> getAddress(Employee employee, List<Map<String, String>> addressList) throws Exception {
         List<Address> addresses = new ArrayList<>();
         for (Map<String, String> addressMap : addressList) {
             Address address = new Address();
@@ -25,7 +25,7 @@ public class EmployeeUtil implements IEmployeeUtil {
             address.setCity(addressMap.get("city") != null ? addressMap.get("city") : " ");
             address.setState(addressMap.get("state") != null ? addressMap.get("state") : " ");
             address.setCountry(addressMap.get("country") != null ? addressMap.get("country") : " ");
-            address.setAddressType(addressType);
+            address.setAddressType(addressMap.get("address_type") != null ? addressMap.get("address_type") : " ");
             address.setEmployee(employee);
             addresses.add(address);
         }
@@ -33,7 +33,8 @@ public class EmployeeUtil implements IEmployeeUtil {
     }
 
     @Override
-    public Employee getEmployee(Request request, Map<String, Object> map) throws Exception {
+    public Employee getEmployee(Request request) throws Exception {
+        Map<String, Object> map = request.getMap();
         Employee employee = new Employee();
         employee.setId(Integer.valueOf(request.getParam3()));
         employee.setName(request.getParam1());
