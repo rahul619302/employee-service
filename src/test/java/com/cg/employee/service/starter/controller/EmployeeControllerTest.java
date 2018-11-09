@@ -22,14 +22,13 @@ class EmployeeControllerTest {
 
     @Mock
     private IEmployeeService employeeService;
-    @Mock
-    private Logger logger;
     @InjectMocks
     private EmployeeController employeeController;
+    @InjectMocks
+    private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
     private Response expectedResponse;
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
@@ -40,17 +39,17 @@ class EmployeeControllerTest {
     @Test
     void saveEmployee() throws Exception {
         BDDMockito.given(employeeService.saveEmployee(Mockito.any(Request.class))).willReturn(expectedResponse);
-        callPostRequest("/employee/save");
+        Assert.assertThat(objectMapper.writeValueAsString(expectedResponse), Is.is(callPostRequest("/employee/save")));
     }
 
     @Test
     void getEmployee() throws Exception {
         BDDMockito.given(employeeService.getEmployee(Mockito.any(Integer.class))).willReturn(expectedResponse);
-        callGetRequest("/employee/get/1");
+        Assert.assertThat(objectMapper.writeValueAsString(expectedResponse), Is.is(callGetRequest("/employee/get/1")));
     }
 
-    private void callPostRequest(String url) throws Exception {
-        String acctualResponse = mockMvc.perform(MockMvcRequestBuilders
+    private String callPostRequest(String url) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(new Request()))
@@ -58,16 +57,14 @@ class EmployeeControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        Assert.assertThat(objectMapper.writeValueAsString(expectedResponse), Is.is(acctualResponse));
     }
 
-    private void callGetRequest(String url) throws Exception {
-        String acctualResponse = mockMvc.perform(MockMvcRequestBuilders
+    private String callGetRequest(String url) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        Assert.assertThat(objectMapper.writeValueAsString(expectedResponse), Is.is(acctualResponse));
     }
 }

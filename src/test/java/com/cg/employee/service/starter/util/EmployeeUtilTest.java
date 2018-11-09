@@ -24,7 +24,8 @@ class EmployeeUtilTest {
 
     @Test
     void getAddress() throws Exception {
-        Address address = new Address("A904", "Sector-15, Belapur CBD", "Navi Mumbai", "Maharastra", "India", "employee", new Employee());
+        Employee employee=new Employee();
+        Address address = new Address("A904", "Sector-15, Belapur CBD", "Navi Mumbai", "Maharastra", "India", "office", employee);
         List<Address> expectedAddresses = Arrays.asList(address);
 
         List<Map<String, String>> addressList = new ArrayList<>();
@@ -34,22 +35,19 @@ class EmployeeUtilTest {
         addressMap.put("city", "Navi Mumbai");
         addressMap.put("state", "Maharastra");
         addressMap.put("country", "India");
+        addressMap.put("addressType", "office");
         addressList.add(addressMap);
-        List<Address> acctualAddresses = employeeUtil.getAddress(new Employee(), addressList);
 
-        Assert.assertThat(expectedAddresses, Is.is(acctualAddresses));
+        Assert.assertThat(expectedAddresses, Is.is(employeeUtil.getAddress(employee, addressList)));
     }
 
     @Test
     void getEmployee() throws Exception {
         Employee expectedEmployee = new Employee(1, "Rahul Singh", "developer", null);
-
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("designation", "developer");
         Request request = new Request("Rahul Singh", "employee", "1", map);
-        Employee acctualEmployee = employeeUtil.getEmployee(request);
-
-        Assert.assertThat(expectedEmployee, Is.is(acctualEmployee));
+        Assert.assertThat(expectedEmployee, Is.is(employeeUtil.getEmployee(request)));
     }
 
     @Test
@@ -60,17 +58,16 @@ class EmployeeUtilTest {
         map.put("employee", employee);
         expectedResponse.setMap(map);
 
-        Response acctualResponse = employeeUtil.getSuccessResponse(null, employee, "employee");
-
-        Assert.assertThat(expectedResponse, Is.is(acctualResponse));
+        Assert.assertThat(expectedResponse, Is.is(employeeUtil.getSuccessResponse(null, employee, "employee")));
     }
 
     @Test
     void invalidEmployeeIdResponse() throws Exception {
-        Response expectedResponse = new Response(EmployeeConstants.S401, EmployeeConstants.S401.getMessage());
+        Assert.assertThat(new Response(EmployeeConstants.S401, EmployeeConstants.S401.getMessage()), Is.is(employeeUtil.invalidEmployeeIdResponse()));
+    }
 
-        Response acctualResponse = employeeUtil.invalidEmployeeIdResponse();
-
-        Assert.assertThat(expectedResponse, Is.is(acctualResponse));
+    @Test
+    void duplicateEmployeeResponse() throws Exception {
+        Assert.assertThat(new Response(EmployeeConstants.S403, EmployeeConstants.S403.getMessage()), Is.is(employeeUtil.duplicateEmployeeResponse()));
     }
 }

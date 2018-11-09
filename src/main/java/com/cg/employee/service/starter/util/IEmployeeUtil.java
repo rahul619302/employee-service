@@ -17,4 +17,6 @@ public interface IEmployeeUtil {
     Response getSuccessResponse(List<Employee> employees, Employee employee, String name) throws Exception;
 
     Response invalidEmployeeIdResponse() throws Exception;
+
+    Response duplicateEmployeeResponse();
 }

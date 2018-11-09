@@ -28,31 +28,34 @@ public class EmployeeService implements IEmployeeService {
     @Transactional(readOnly = false)
     public Response saveEmployee(Request request) throws Exception {
         Map<String, Object> map = request.getMap();
-        Employee employee = employeeUtil.getEmployee(request);
-        List<Map<String, String>> addressList = (List<Map<String, String>>) map.get("address_list");
-        List<Address> addresses = null;
-        if (addressList != null) {
-            addresses = employeeUtil.getAddress(employee, addressList);
-            employee.setAddresses(addresses);
+        int id = Integer.valueOf(request.getParam3());
+        Optional<Employee> optionalEmployee=employeeDao.findById(id);
+        if(!optionalEmployee.isPresent()) {
+            Employee employee = employeeUtil.getEmployee(request);
+            List<Map<String, String>> addressList = (List<Map<String, String>>) map.get("address_list");
+            List<Address> addresses = null;
+            if (addressList != null) {
+                addresses = employeeUtil.getAddress(employee, addressList);
+                employee.setAddresses(addresses);
+            }
+            employee = employeeDao.save(employee);
+            return employeeUtil.getSuccessResponse(null, null, null);
+        }else{
+            return employeeUtil.duplicateEmployeeResponse();
         }
-        employee = employeeDao.save(employee);
-        Response response = employeeUtil.getSuccessResponse(null, employee, "employee");
-        return response;
     }
 
     @Override
     public Response getEmployee(Integer id) throws Exception {
-        Response response = null;
         if (id == null) {
             List<Employee> employees = employeeDao.findAll();
-            response = employeeUtil.getSuccessResponse(employees, null, "employees");
+            return employeeUtil.getSuccessResponse(employees, null, "employees");
         } else {
             Optional<Employee> employeeOptional = employeeDao.findById(id);
             if (!employeeOptional.isPresent())
                 return employeeUtil.invalidEmployeeIdResponse();
             Employee employee = employeeOptional.get();
-            response = employeeUtil.getSuccessResponse(null, employee, "employee");
+            return employeeUtil.getSuccessResponse(null, employee, "employee");
         }
-        return response;
     }
 }

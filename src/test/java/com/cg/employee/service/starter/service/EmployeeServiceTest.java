@@ -1,5 +1,6 @@
 package com.cg.employee.service.starter.service;
 
+import com.cg.employee.service.starter.constant.EmployeeConstants;
 import com.cg.employee.service.starter.dao.IEmployeeDao;
 import com.cg.employee.service.starter.payload.Request;
 import com.cg.employee.service.starter.payload.Response;
@@ -24,38 +25,42 @@ class EmployeeServiceTest {
     private IEmployeeDao employeeDao;
     @InjectMocks
     private EmployeeService employeeService;
+    private Response expectedResponse;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        expectedResponse = new Response(EmployeeConstants.S200, EmployeeConstants.S200.getMessage());
+    }
 
 
     @Test
     void saveEmployee() throws Exception {
-        Response expectedResponse = new Response();
         Map<String, Object> map = new HashMap<>();
         map.put("address_list", new ArrayList<Map<String, String>>());
-        Request request = new Request("", "office", "", map);
+        Request request = new Request("Rahul Singh", "office", "1", map);
+        Optional<Employee> employeeOptional = Optional.empty();
+        BDDMockito.given(employeeDao.findById(Mockito.anyInt())).willReturn(employeeOptional);
         BDDMockito.given(employeeUtil.getEmployee(Mockito.any(Request.class))).willReturn(new Employee());
         BDDMockito.given(employeeUtil.getAddress(Mockito.any(Employee.class), Mockito.any(List.class))).willReturn(new ArrayList<Address>());
         BDDMockito.given(employeeDao.save(Mockito.any(Employee.class))).willReturn(new Employee());
-        BDDMockito.given(employeeUtil.getSuccessResponse(Mockito.any(), Mockito.any(Employee.class), Mockito.anyString())).willReturn(expectedResponse);
-        Response acctualResponse = employeeService.saveEmployee(request);
-        Assert.assertThat(expectedResponse, Is.is(acctualResponse));
+        BDDMockito.given(employeeUtil.getSuccessResponse(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull())).willReturn(expectedResponse);
+        Assert.assertThat(expectedResponse, Is.is(employeeService.saveEmployee(request)));
     }
 
     @Test
     void getEmployee() throws Exception {
-        Response expectedResponse = new Response();
-        Integer id = null;
+        Integer id = 1;
         if (id == null) {
             BDDMockito.given(employeeDao.findAll()).willReturn(new ArrayList<Employee>());
-            BDDMockito.given(employeeUtil.getSuccessResponse(Mockito.any(), Mockito.any(Employee.class), Mockito.anyString())).willReturn(expectedResponse);
+            BDDMockito.given(employeeUtil.getSuccessResponse(Mockito.any(List.class), ArgumentMatchers.isNull(), Mockito.any(String.class))).willReturn(expectedResponse);
         } else {
             Optional<Employee> employeeOptional = Optional.of(new Employee());
             BDDMockito.given(employeeDao.findById(Mockito.anyInt())).willReturn(employeeOptional);
             if (!employeeOptional.isPresent())
                 BDDMockito.given(employeeUtil.invalidEmployeeIdResponse()).willReturn(expectedResponse);
             else
-                BDDMockito.given(employeeUtil.getSuccessResponse(Mockito.any(), Mockito.any(Employee.class), Mockito.anyString())).willReturn(expectedResponse);
+                BDDMockito.given(employeeUtil.getSuccessResponse(ArgumentMatchers.isNull(), Mockito.any(Employee.class), Mockito.any(String.class))).willReturn(expectedResponse);
         }
-        Response acctualResponse = employeeService.getEmployee(id);
-        Assert.assertThat(expectedResponse, Is.is(acctualResponse));
+        Assert.assertThat(expectedResponse, Is.is(employeeService.getEmployee(id)));
     }
 }

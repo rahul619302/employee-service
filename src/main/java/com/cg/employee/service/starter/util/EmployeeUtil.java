@@ -25,7 +25,7 @@ public class EmployeeUtil implements IEmployeeUtil {
             address.setCity(addressMap.get("city") != null ? addressMap.get("city") : " ");
             address.setState(addressMap.get("state") != null ? addressMap.get("state") : " ");
             address.setCountry(addressMap.get("country") != null ? addressMap.get("country") : " ");
-            address.setAddressType(addressMap.get("address_type") != null ? addressMap.get("address_type") : " ");
+            address.setAddressType(addressMap.get("addressType") != null ? addressMap.get("addressType") : " ");
             address.setEmployee(employee);
             addresses.add(address);
         }
@@ -59,5 +59,10 @@ public class EmployeeUtil implements IEmployeeUtil {
     @Override
     public Response invalidEmployeeIdResponse() throws Exception {
         return new Response(EmployeeConstants.S401, EmployeeConstants.S401.getMessage());
+    }
+
+    @Override
+    public Response duplicateEmployeeResponse() {
+        return new Response(EmployeeConstants.S403, EmployeeConstants.S403.getMessage());
     }
 }
