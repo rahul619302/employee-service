@@ -1,0 +1,2 @@
+INSERT INTO Employee_Tbl (Emp_Id, Emp_Name, Emp_Designation) VALUES (1, 'Rahul Singh', 'Developer');
+INSERT INTO Address_Tbl (Address_Id, Flat_No, Area, City, State, Country, Address_Type, emp_student_fk) VALUES (1, 'A904, Israni Tower', 'Sector-15, CBD Belapur', 'Navi Mumbai', 'Maharsatra', 'India', 'Office', 1);
